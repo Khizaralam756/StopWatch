@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stopwatch App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    #display {
+      font-size: 3em;
+      margin: 20px;
+      padding: 20px 40px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1.1em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background: #4caf50;
+      color: white;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #388e3c;
+    }
+
+    button:disabled {
+      background: #9e9e9e;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stopwatch App</h1>
+  <div id="display">00:00:00</div>
+  <div class="buttons">
+    <button onclick="start()">Start</button>
+    <button onclick="stop()">Stop</button>
+    <button onclick="reset()">Reset</button>
+  </div>
+
+  <script>
+    let startTime;
+    let running = false;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    function updateDisplay() {
+      const time = Date.now() - startTime + elapsedTime;
+      const hours = Math.floor(time / 3600000);
+      const minutes = Math.floor((time % 3600000) / 60000);
+      const seconds = Math.floor((time % 60000) / 1000);
+
+      document.getElementById("display").textContent =
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function start() {
+      if (running) return;
+      running = true;
+      startTime = Date.now();
+      timerInterval = setInterval(updateDisplay, 1000);
+    }
+
+    function stop() {
+      if (!running) return;
+      running = false;
+      elapsedTime += Date.now() - startTime;
+      clearInterval(timerInterval);
+    }
+
+    function reset() {
+      running = false;
+      clearInterval(timerInterval);
+      startTime = null;
+      elapsedTime = 0;
+      document.getElementById("display").textContent = "00:00:00";
+    }
+  </script>
+</body>
+</html>
